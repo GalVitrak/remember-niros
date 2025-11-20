@@ -1,6 +1,7 @@
 import "./Layout.css";
 import { Header } from "../Header/Header";
 import Footer from "../Footer/Footer";
+import { Routing } from "../Routing/Routing";
 
 export function Layout(): React.ReactElement {
   return (
@@ -9,7 +10,7 @@ export function Layout(): React.ReactElement {
         <Header />
       </div>
       <div className="main">
-        <h1>Main</h1>
+        <Routing />
       </div>
       <div className="footer">
         <Footer />

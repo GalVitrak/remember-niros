@@ -1,0 +1,60 @@
+.Memories {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.memories-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.memories-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.memories-header p {
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  color: var(--text-medium);
+}
+
+.memories-header button {
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  color: var(--white);
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.memories-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
