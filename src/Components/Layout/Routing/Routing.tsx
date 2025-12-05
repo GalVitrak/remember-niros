@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import "./Routing.css";
 import Auth from "../../Admin/Auth/Auth";
 import Memories from "../../Home/Memories/Memories";
+import About from "../../Home/About/About";
 
 export function Routing(): React.ReactElement {
   return (
@@ -13,7 +14,7 @@ export function Routing(): React.ReactElement {
         />
         <Route
           path="/about"
-          element={<div>About</div>}
+          element={<About />}
         />
         <Route path="/auth" element={<Auth />} />
       </Routes>

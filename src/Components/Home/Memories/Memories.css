@@ -1,60 +1,264 @@
 .Memories {
-  width: 100%;
-  height: 100%;
+  width: 85%;
+  min-height: calc(100vh - 180px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
+  padding: 0rem 1rem 4rem 1rem;
   box-sizing: border-box;
-  overflow-y: auto;
+  background: #f5f5f5;
+  overflow-x: hidden;
+  max-width: 100vw;
+  margin: 0 auto;
 }
 
 .memories-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
-  box-sizing: border-box;
-  overflow-y: auto;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .memories-header h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
   margin: 0;
-  color: var(--primary-color);
+  color: var(--primary-color, #333);
 }
 
 .memories-header p {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 400;
   margin: 0;
-  color: var(--text-medium);
+  color: var(--text-medium, #666);
 }
 
-.memories-header button {
+.add-memory-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.add-memory-btn {
   font-size: 1rem;
-  font-weight: 400;
-  margin: 0;
-  color: var(--white);
-  background-color: var(--primary-color);
+  font-weight: 600;
+  color: var(--white, #ffffff);
+  background-color: var(--primary-color, #007bff);
   border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
   cursor: pointer;
+  transition: background-color 0.2s,
+    transform 0.1s;
 }
 
-.memories-container {
+.add-memory-btn:hover {
+  background-color: var(
+    --primary-color-dark,
+    #0056b3
+  );
+  transform: translateY(-2px);
+}
+
+.add-memory-btn:active {
+  transform: translateY(0);
+}
+
+.memories-feed {
+  width: 100%;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
-  box-sizing: border-box;
-  overflow-y: auto;
+  gap: 2rem;
+}
+
+.nir-message {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(185, 163, 219, 0.15) 0%,
+    rgba(255, 255, 255, 0.98) 100%
+  );
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--primary-color, #250650);
+  position: relative;
+  overflow: hidden;
+}
+
+.nir-message::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    var(--primary-light, #b9a3db) 0%,
+    var(--primary-color, #250650) 50%,
+    var(--primary-dark, #3a136c) 100%
+  );
+}
+
+.nir-message-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(37, 6, 80, 0.1);
+}
+
+.nir-message-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--primary-color, #250650);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nir-message-content {
+  direction: rtl;
+  text-align: right;
+}
+
+.nir-message-content p {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: var(--text-dark, #1a1a1a);
+  margin: 0 0 1.25rem 0;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.nir-message-content p:last-child {
+  margin-bottom: 0;
+}
+
+.nir-message-signature {
+  text-align: center !important;
+  font-weight: 600;
+  color: var(--primary-dark, #3a136c);
+  font-size: 1.15rem;
+  margin: 1.5rem 0 !important;
+}
+
+.nir-message-name {
+  text-align: left !important;
+  font-weight: 700;
+  color: var(--primary-color, #250650);
+  font-size: 1.5rem;
+  margin-top: 2rem !important;
+  font-style: italic;
+}
+
+.memories-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading,
+.error,
+.no-memories {
+  background: var(--white, #ffffff);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-medium, #666);
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+@media (max-width: 768px) {
+  .Memories {
+    padding: 1.5rem 0.75rem 3rem 0.75rem;
+    min-height: calc(100vh - 120px);
+  }
+
+  .memories-feed {
+    width: 100%;
+    padding: 0;
+  }
+
+  .nir-message {
+    padding: 2rem 1.5rem;
+    width: calc(100% - 0px);
+    box-sizing: border-box;
+  }
+
+  .nir-message-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .nir-message-content p {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .nir-message-signature {
+    font-size: 1.1rem;
+  }
+
+  .nir-message-name {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .Memories {
+    padding: 1rem 0.5rem 3rem 0.5rem;
+    min-height: calc(100vh - 100px);
+  }
+
+  .memories-feed {
+    width: 100%;
+    padding: 0;
+  }
+
+  .nir-message {
+    padding: 1.5rem 1rem;
+    width: calc(100% - 0px);
+    box-sizing: border-box;
+  }
+
+  .nir-message-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .nir-message-content p {
+    font-size: 1rem;
+    line-height: 1.8;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .nir-message-signature {
+    font-size: 1.05rem;
+  }
+
+  .nir-message-name {
+    font-size: 1.2rem;
+  }
+
+  .memories-header h1 {
+    font-size: 2rem;
+  }
+
+  .memories-header p {
+    font-size: 1rem;
+  }
 }

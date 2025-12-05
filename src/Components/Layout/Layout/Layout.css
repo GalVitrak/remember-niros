@@ -1,56 +1,68 @@
 .Layout {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(12, 1fr);
+  grid-template-rows: repeat(11, 1fr) auto;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
-  overflow: hidden;
+  overflow-x: hidden;
+  position: relative;
 }
 .header {
   width: 100%;
-  height: 100%;
-  grid-area: 1 / 1 / 4 / 6;
+  grid-area: 1 / 1 / 2 / 6;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 0;
-}
-.main {
-  background: linear-gradient(
-    180deg,
-    rgba(185, 163, 219, 0.25) 0%,
-    rgba(185, 163, 219, 0.18) 25%,
-    rgba(185, 163, 219, 0.12) 50%,
-    rgba(185, 163, 219, 0.18) 75%,
-    rgba(185, 163, 219, 0.25) 100%
-  );
-  grid-area: 4 / 1 / 12 / 6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  min-height: 0;
+  height: 0;
+  overflow: visible;
+  z-index: 1001;
+  background: transparent;
+  pointer-events: none;
 }
 
-.main::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(77, 28, 145, 0.08) 0%,
-    transparent 50%,
-    rgba(77, 28, 145, 0.08) 100%
-  );
-  pointer-events: none;
+.header > * {
+  pointer-events: all;
+}
+
+.main {
+  background: #f5f5f5;
+  grid-area: 1 / 1 / 12 / 6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 250px;
+  padding-bottom: 2rem;
+  z-index: 1;
+  min-height: 0;
+}
+
+.main > * {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding-top: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding-top: 100px;
+  }
 }
 .footer {
   grid-area: 12 / 1 / 13 / 6;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 0;
 }

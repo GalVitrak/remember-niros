@@ -2,6 +2,7 @@ import "./Layout.css";
 import { Header } from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { Routing } from "../Routing/Routing";
+import { ScrollToTop } from "../ScrollToTop/ScrollToTop";
 
 export function Layout(): React.ReactElement {
   return (
@@ -15,6 +16,7 @@ export function Layout(): React.ReactElement {
       <div className="footer">
         <Footer />
       </div>
+      <ScrollToTop />
     </div>
   );
 }
