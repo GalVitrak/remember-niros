@@ -1,21 +1,43 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 import React from "react";
 import CredentialsModel from "../../../Models/CredentialsModel";
 import authService from "../../../Services/AuthService";
+import {
+  authStore,
+  AuthActionType,
+} from "../../../Context/AuthState";
+import { showError } from "../../../utils/notifications";
 
 function Auth(): React.ReactElement {
   const { register, handleSubmit } =
     useForm<CredentialsModel>();
+  const navigate = useNavigate();
 
   async function sendCredentials(
     credentials: CredentialsModel
   ) {
-    console.log(credentials);
-    const token = await authService.login(
-      credentials
-    );
-    console.log(token);
+    try {
+      const token = await authService.login(
+        credentials
+      );
+      // Store token in auth store
+      authStore.dispatch({
+        type: AuthActionType.Login,
+        payload: { token },
+      });
+      // Store username separately in localStorage for admin operations
+      localStorage.setItem(
+        "adminUsername",
+        credentials.username
+      );
+      // Redirect to admin dashboard
+      navigate("/admin");
+    } catch (error) {
+      console.error("Login error:", error);
+      showError("שגיאה בהתחברות. נסה שוב.");
+    }
   }
 
   return (

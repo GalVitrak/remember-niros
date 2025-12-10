@@ -1,12 +1,21 @@
 rules_version = '2';
 
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
+    // Allow public read access to all files
     match /{allPaths=**} {
-      allow read, write: if false;
+      allow read: if true;
+    }
+    
+    // Deny all client-side writes - uploads must go through backend
+    // The uploadImages cloud function handles all uploads securely
+    match /memories/{fileName} {
+      allow write: if false; // All uploads must go through backend cloud function
+    }
+    
+    // Deny writes to all other paths
+    match /{allPaths=**} {
+      allow write: if false;
     }
   }
 }

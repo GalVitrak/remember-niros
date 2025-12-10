@@ -12,6 +12,8 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../../../../firebase-config";
 import MemoryCard from "../../Cards/MemoryCard/MemoryCard";
 import PostForm from "./PostForm/PostForm";
+import { SEO } from "../../SEO/SEO";
+import { siteConfig } from "../../../config/siteConfig";
 
 function Memories(): React.ReactElement {
   const [isModalOpen, setIsModalOpen] =
@@ -59,8 +61,9 @@ function Memories(): React.ReactElement {
 
         return new MemoryModel(
           data.memory || "",
-          data.writer || "אורח",
-          data.imageUrl,
+          data.writer || "אנונימי",
+          data.imageUrl, // For backward compatibility
+          data.imageUrls, // Array of image URLs
           createdAt,
           data.status,
           approvedAt,
@@ -86,95 +89,121 @@ function Memories(): React.ReactElement {
     // The useCollection hook will automatically refresh when new documents are added
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "זכרונות מניר",
+    description:
+      'זכרונות, תמונות וסיפורים מחברים ומשפחה להנצחת זכרו של סמ"ר ניר רפאל קנניאן הי"ד',
+    url: `${siteConfig.url}/memories`,
+    about: {
+      "@type": "Person",
+      name: "ניר רפאל קנניאן",
+    },
+  };
+
   return (
-    <div className="Memories">
-      <div className="memories-feed">
-        <div className="nir-message">
-          <div className="nir-message-header">
-            <h2>
-              לפני נפילתו ניר שלח הודעה למשפחתו
-              וחבריו, זוהי ההודעה
-            </h2>
+    <>
+      <SEO
+        title="זכרונות מניר"
+        description={
+          'זכרונות, תמונות וסיפורים מחברים ומשפחה להנצחת זכרו של סמ"ר ניר רפאל קנניאן הי"ד. הוסיפו זכרון משלכם.'
+        }
+        keywords="זכרונות ניר, תמונות ניר, סיפורים על ניר, הנצחה, ניר קנניאן, זכרונות מחברים"
+        url="/memories"
+        structuredData={structuredData}
+      />
+      <div className="Memories">
+        <div className="memories-feed">
+          <div className="nir-message">
+            <div className="nir-message-header">
+              <h2>
+                לפני נפילתו ניר שלח הודעה למשפחתו
+                וחבריו, זוהי ההודעה
+              </h2>
+            </div>
+            <div className="nir-message-content">
+              <p>
+                משפחה שלי האנשים שהם הבית בשבילי
+                המקום הבטוח שאני תמיד אוהב לחזור
+                אליו, ברגעים אלה אני מכבה את
+                הטלפון עד לפי דעתי אחרי המלחמה.
+                ולכן אני רוצה להגיד לכם תודה רבה,
+                על התפילות, על זה שאתם שומרים עלי
+                מרחוק. אני מאמין בלב שלם שמה שאני,
+                הצוות שלי, הפלוגה שלי, הצקפ שלי
+                וכל צה״ל ככלל ישנה את ספרי
+                ההיסטוריה ויוביל אותנו לתקופה חדשה
+                שבא אף ארגון טרור לא ירצה להתעסק
+                איתנו. הרוח שלי והרוח של כולם חזקה
+                מאוד רוח לחימה בלי פחד, רוח של
+                לוחמים, אריות, מכונות מלחמה
+                שהתאמנו במשך שנתיים לרגע הזה.
+                אנחנו עם מלוכד ומאוחד ורק יחד
+                ננצח.
+              </p>
+              <p className="nir-message-signature">
+                עם ישראל חי
+              </p>
+              <p className="nir-message-signature">
+                אני אשמור על עצמי ואתם תשמרו על
+                עצמכם אוהב אותכם ❤️
+              </p>
+              <p className="nir-message-name">
+                ניר
+              </p>
+            </div>
           </div>
-          <div className="nir-message-content">
+
+          <div className="memories-header">
+            <h1>זכרונות מניר</h1>
             <p>
-              משפחה שלי האנשים שהם הבית בשבילי
-              המקום הבטוח שאני תמיד אוהב לחזור
-              אליו, ברגעים אלה אני מכבה את הטלפון
-              עד לפי דעתי אחרי המלחמה. ולכן אני
-              רוצה להגיד לכם תודה רבה, על התפילות,
-              על זה שאתם שומרים עלי מרחוק. אני
-              מאמין בלב שלם שמה שאני, הצוות שלי,
-              הפלוגה שלי, הצקפ שלי וכל צה״ל ככלל
-              ישנה את ספרי ההיסטוריה ויוביל אותנו
-              לתקופה חדשה שבא אף ארגון טרור לא
-              ירצה להתעסק איתנו. הרוח שלי והרוח של
-              כולם חזקה מאוד רוח לחימה בלי פחד,
-              רוח של לוחמים, אריות, מכונות מלחמה
-              שהתאמנו במשך שנתיים לרגע הזה. אנחנו
-              עם מלוכד ומאוחד ורק יחד ננצח.
-            </p>
-            <p className="nir-message-signature">
-              עם ישראל חי
-            </p>
-            <p className="nir-message-signature">
-              אני אשמור על עצמי ואתם תשמרו על
-              עצמכם אוהב אותכם ❤️
-            </p>
-            <p className="nir-message-name">
-              ניר
+              אתם מוזמנים לשתף זכרונות, תמונות
+              וסיפורים, כדי להנציח את ניר שלנו
             </p>
           </div>
-        </div>
 
-        <div className="memories-header">
-          <h1>זכרונות על ניר</h1>
-          <p>
-            אתם מוזמנים לשתף זכרונות, תמונות
-            וסיפורים, כדי להנציח את ניר שלנו
-          </p>
-        </div>
+          <div className="add-memory-section">
+            <button
+              className="add-memory-btn"
+              onClick={() => setIsModalOpen(true)}
+            >
+              הוסף זכרון
+            </button>
+          </div>
 
-        <div className="add-memory-section">
-          <button
-            className="add-memory-btn"
-            onClick={() => setIsModalOpen(true)}
-          >
-            הוסף זכרון
-          </button>
-        </div>
+          <PostForm
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onPostCreated={handlePostCreated}
+          />
 
-        <PostForm
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onPostCreated={handlePostCreated}
-        />
-
-        <div className="memories-list">
-          {loading ? (
-            <div className="loading">
-              טוען זכרונות...
-            </div>
-          ) : error ? (
-            <div className="error">
-              שגיאה בטעינת הזכרונות
-            </div>
-          ) : memoriesData.length > 0 ? (
-            memoriesData.map((memory) => (
-              <MemoryCard
-                key={memory.id}
-                memory={memory}
-              />
-            ))
-          ) : (
-            <div className="no-memories">
-              אין זכרונות פעילים כרגע, מוזמנים
-              להוסיף זכרון חדש
-            </div>
-          )}
+          <div className="memories-list">
+            {loading ? (
+              <div className="loading">
+                טוען זכרונות...
+              </div>
+            ) : error ? (
+              <div className="error">
+                שגיאה בטעינת הזכרונות
+              </div>
+            ) : memoriesData.length > 0 ? (
+              memoriesData.map((memory) => (
+                <MemoryCard
+                  key={memory.id}
+                  memory={memory}
+                />
+              ))
+            ) : (
+              <div className="no-memories">
+                אין זכרונות פעילים כרגע, מוזמנים
+                להוסיף זכרון חדש
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

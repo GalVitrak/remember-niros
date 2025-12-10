@@ -1,0 +1,14 @@
+# robots.txt for Remember Niros Memorial Site
+
+User-agent: *
+Allow: /
+Allow: /memories
+Allow: /
+
+# Disallow admin pages
+Disallow: /admin
+Disallow: /auth
+
+# Sitemap location (update with your actual domain)
+Sitemap: https://rememberniros.com/sitemap.xml
+

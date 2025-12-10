@@ -1,75 +1,143 @@
-# React + TypeScript + Vite
+# לזכרו של סמ"ר ניר רפאל קנניאן הי"ד
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+אתר הנצחה לזכרו של סמ"ר ניר רפאל קנניאן הי"ד, לוחם סיירת גבעתי אשר נפל במלחמת חרבות ברזל.
 
-Currently, two official plugins are available:
+## 🕯️ אודות
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+אתר זה נוצר להנצחת זכרו של ניר, ומאפשר למשפחה וחברים לשתף זכרונות, תמונות וסיפורים. האתר נבנה באהבה ובכבוד לזכרו.
 
-## React Compiler
+## 🛠️ טכנולוגיות
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Frontend
 
-Note: This will impact Vite dev & build performances.
+- **React 19** - ספריית UI מודרנית
+- **TypeScript** - תמיכה בטיפוסים חזקים
+- **Vite** - כלי בנייה מהיר ומודרני
+- **React Router DOM** - ניהול ניווט ונתיבים
+- **Ant Design** - ספריית רכיבי UI עם תמיכה מלאה ב-RTL
+- **React Hook Form** - ניהול טפסים יעיל
+- **React Firebase Hooks** - חיבורים בזמן אמת ל-Firebase
+- **React Helmet Async** - ניהול SEO ומטא-טאגים
+- **Redux** - ניהול מצב גלובלי לאימות
 
-## Expanding the ESLint configuration
+### Backend & Infrastructure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Firebase Functions** (Node.js 20) - פונקציות ענן לשרת
+- **Firebase Firestore** - מסד נתונים בזמן אמת
+- **Firebase Storage** - אחסון תמונות
+- **Firebase Hosting** - אירוח סטטי
+- **Firebase Security Rules** - כללי אבטחה
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Backend Libraries
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **bcrypt** - הצפנת סיסמאות
+- **jsonwebtoken** - יצירת ואימות JWT tokens
+- **dotenv** - ניהול משתני סביבה
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## ✨ תכונות
+
+### למשתמשים
+
+- **שיתוף זכרונות** - הוספת זכרונות טקסטואליים עם תמיכה בעברית
+- **העלאת תמונות** - עד 5 תמונות לכל זכרון
+- **גלריית תמונות** - צפייה בתמונות במסך מלא עם ניווט
+- **עיצוב רספונסיבי** - תמיכה מלאה במובייל, טאבלט ומחשב
+- **תמיכה ב-RTL** - ממשק מותאם לעברית
+
+### למנהלים
+
+- **לוח בקרה** - ניהול מלא של הזכרונות
+- **אישור ודחיית זכרונות** - בקרת איכות לפני פרסום
+- **ניהול תמונות** - הסרה של תמונות ספציפיות
+- **ניהול משתמשים** - יצירה, מחיקה ושינוי סיסמאות של מנהלים
+- **מחיקת זכרונות** - מחיקה מלאה של זכרונות שנדחו
+
+### SEO & Performance
+
+- **SEO מלא** - מטא-טאגים, Open Graph, Twitter Cards
+- **JSON-LD Structured Data** - נתונים מובנים למנועי חיפוש
+- **robots.txt & sitemap.xml** - אופטימיזציה למנועי חיפוש
+- **Cache Headers** - ביצועים מיטביים עם cache לקבצים סטטיים
+
+## 🔒 אבטחה
+
+- כל הכתיבות למסד הנתונים מתבצעות דרך Cloud Functions בלבד
+- סיסמאות מוצפנות עם bcrypt
+- אימות JWT לכל פעולות מנהל
+- כללי אבטחה מחמירים ב-Firestore ו-Storage
+- העלאת תמונות דרך backend בלבד
+
+## 📁 מבנה הפרויקט
+
+```
+remember-niros/
+├── src/
+│   ├── Components/        # רכיבי React
+│   │   ├── Admin/        # ממשק ניהול
+│   │   ├── Cards/        # כרטיסי זכרונות
+│   │   ├── Home/          # דפי בית
+│   │   └── Layout/        # פריסה כללית
+│   ├── Services/          # שירותי API
+│   ├── Context/           # ניהול מצב (Redux)
+│   └── config/            # הגדרות כלליות
+├── functions/             # Firebase Cloud Functions
+│   └── src/
+│       ├── addMemory.ts
+│       ├── approveMemory.ts
+│       ├── rejectMemory.ts
+│       ├── uploadImages.ts
+│       └── ...
+├── public/                # קבצים סטטיים
+└── firebase.json          # הגדרות Firebase
+
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🚀 התקנה והרצה
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### דרישות מקדימות
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 20+
+- npm או yarn
+- חשבון Firebase
+
+### התקנה
+
+```bash
+# התקנת תלויות frontend
+npm install
+
+# התקנת תלויות functions
+cd functions
+npm install
+cd ..
 ```
+
+### הרצה מקומית
+
+```bash
+# הרצת frontend
+npm run dev
+
+# הרצת functions (בטרמינל נפרד)
+cd functions
+npm run serve
+```
+
+### בנייה לייצור
+
+```bash
+# בניית frontend
+npm run build
+
+# בניית functions
+cd functions
+npm run build
+```
+
+## 📝 רישיון
+
+פרויקט זה נוצר למטרות הנצחה בלבד.
+
+---
+
+**יהי זכרו ברוך** 🕯️

@@ -7,6 +7,10 @@ import {
   Link,
   useLocation,
 } from "react-router-dom";
+import {
+  authStore,
+  isLoggedIn,
+} from "../../../Context/AuthState";
 import "./Header.css";
 import nirImage from "../../../assets/nir.webp";
 
@@ -19,6 +23,18 @@ export function Header(): React.ReactElement {
     useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] =
+    useState(isLoggedIn());
+
+  // Subscribe to auth store changes
+  useEffect(() => {
+    const unsubscribe = authStore.subscribe(
+      () => {
+        setIsAuthenticated(isLoggedIn());
+      }
+    );
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -98,10 +114,6 @@ export function Header(): React.ReactElement {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleMenuClick = () => {
-    setIsMenuOpen(false);
-  };
-
   const handleNavigation = () => {
     setIsMenuOpen(false);
     window.scrollTo({
@@ -150,19 +162,33 @@ export function Header(): React.ReactElement {
               isActive("/") ? "active" : ""
             }`}
           >
-            עמוד הזכרונות
-          </Link>
-          <Link
-            to="/about"
-            className={`header-button ${
-              isActive("/about") ? "active" : ""
-            }`}
-          >
             אודות ניר
           </Link>
-          <div className="header-button">
-            חנות
-          </div>
+          <Link
+            to="/memories"
+            className={`header-button ${
+              isActive("/memories")
+                ? "active"
+                : ""
+            }`}
+          >
+            זכרונות מניר
+          </Link>
+          {isAuthenticated && (
+            <Link
+              to="/admin"
+              className={`header-button ${
+                isActive("/admin") ||
+                location.pathname.startsWith(
+                  "/admin"
+                )
+                  ? "active"
+                  : ""
+              }`}
+            >
+              לוח בקרה
+            </Link>
+          )}
         </div>
         <button
           className="hamburger-menu"
@@ -192,23 +218,35 @@ export function Header(): React.ReactElement {
             }`}
             onClick={handleNavigation}
           >
-            עמוד הזכרונות
+            אודות ניר{" "}
           </Link>
           <Link
-            to="/about"
+            to="/memories"
             className={`nav-button ${
-              isActive("/about") ? "active" : ""
+              isActive("/memories")
+                ? "active"
+                : ""
             }`}
             onClick={handleNavigation}
           >
-            אודות ניר
+            זכרונות מניר{" "}
           </Link>
-          <div
-            className="nav-button"
-            onClick={handleMenuClick}
-          >
-            חנות
-          </div>
+          {isAuthenticated && (
+            <Link
+              to="/admin"
+              className={`nav-button ${
+                isActive("/admin") ||
+                location.pathname.startsWith(
+                  "/admin"
+                )
+                  ? "active"
+                  : ""
+              }`}
+              onClick={handleNavigation}
+            >
+              לוח בקרה
+            </Link>
+          )}
         </div>
       </div>
     </div>

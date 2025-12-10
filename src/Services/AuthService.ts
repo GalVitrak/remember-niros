@@ -14,10 +14,8 @@ class AuthService {
       const result = await login({
         credentials: credentials,
       });
-      console.log(result.data);
       return result.data as string;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }

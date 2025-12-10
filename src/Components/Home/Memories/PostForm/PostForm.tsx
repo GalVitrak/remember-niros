@@ -1,8 +1,12 @@
 import { useState, useRef } from "react";
 import "./PostForm.css";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { storage, db } from "../../../../../firebase-config";
+import type MemoryModel from "../../../../Models/MemoryModel";
+import { useForm } from "react-hook-form";
+import memoryService from "../../../../Services/MemoryService";
+import {
+  showError,
+  showWarning,
+} from "../../../../utils/notifications";
 
 interface PostFormProps {
   isOpen: boolean;
@@ -10,69 +14,78 @@ interface PostFormProps {
   onPostCreated?: () => void;
 }
 
-function PostForm({ isOpen, onClose, onPostCreated }: PostFormProps): React.ReactElement {
-  const [text, setText] = useState("");
-  const [writerName, setWriterName] = useState("");
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+function PostForm({
+  isOpen,
+  onClose,
+  onPostCreated,
+}: PostFormProps): React.ReactElement {
+  const [images, setImages] = useState<File[]>(
+    []
+  );
+  const [imageUrls, setImageUrls] = useState<
+    string[]
+  >([]);
+  const [isUploading, setIsUploading] =
+    useState(false);
+  const fileInputRef =
+    useRef<HTMLInputElement>(null);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const { register, handleSubmit } =
+    useForm<MemoryModel>();
 
-  const handleRemoveImage = () => {
-    setImage(null);
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!text.trim() && !image) return;
-
-    setIsUploading(true);
+  async function sendMemory(memory: MemoryModel) {
     try {
-      let imageUrl: string | undefined;
+      setIsUploading(true);
+      let uploadedImageUrls: string[] = [];
 
-      // Upload image if provided
-      if (image) {
-        const imageRef = ref(
-          storage,
-          `memories/${Date.now()}_${image.name}`
+      // Upload all images to backend if provided
+      if (images.length > 0) {
+        // Convert images to base64
+        const base64Promises = images.map(
+          (file) => {
+            return new Promise<string>(
+              (resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  resolve(
+                    reader.result as string
+                  );
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+              }
+            );
+          }
         );
-        await uploadBytes(imageRef, image);
-        imageUrl = await getDownloadURL(imageRef);
+
+        const base64Images = await Promise.all(
+          base64Promises
+        );
+
+        // Upload via backend service
+        uploadedImageUrls =
+          await memoryService.uploadImages(
+            base64Images
+          );
       }
 
-      // Use provided name or default to "אורח" (Guest)
-      const finalWriterName = writerName.trim() || "אורח";
+      // Prepare memory data with image URLs
+      const memoryData: MemoryModel = {
+        memory: memory.memory.trim(),
+        writer:
+          memory.writer?.trim() || "אנונימי",
+        imageUrls:
+          uploadedImageUrls.length > 0
+            ? uploadedImageUrls
+            : undefined,
+      };
 
-      // Add memory to Firestore
-      await addDoc(collection(db, "memories"), {
-        memory: text.trim(),
-        writer: finalWriterName,
-        imageUrl: imageUrl || null,
-        createdAt: serverTimestamp(),
-        status: "approved", // Auto-approve for now, or change to "pending" for moderation
-      });
+      // Send to backend for validation and document creation
+      await memoryService.addMemory(memoryData);
 
       // Reset form
-      setText("");
-      setWriterName("");
-      setImage(null);
-      setImagePreview(null);
+      setImages([]);
+      setImageUrls([]);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -83,21 +96,86 @@ function PostForm({ isOpen, onClose, onPostCreated }: PostFormProps): React.Reac
         onPostCreated();
       }
     } catch (error) {
-      console.error("Error creating post:", error);
-      alert("שגיאה ביצירת הפוסט. נסה שוב.");
+      console.error(
+        "Error creating post:",
+        error
+      );
+      showError("שגיאה ביצירת הפוסט. נסה שוב.");
     } finally {
       setIsUploading(false);
     }
+  }
+
+  const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = Array.from(
+      e.target.files || []
+    );
+    const remainingSlots = 5 - images.length;
+
+    if (files.length > remainingSlots) {
+      showWarning(
+        `ניתן להעלות עד 5 תמונות. נשארו ${remainingSlots} מקומות.`
+      );
+      return;
+    }
+
+    const newFiles = files.slice(
+      0,
+      remainingSlots
+    );
+    const updatedImages = [
+      ...images,
+      ...newFiles,
+    ];
+    setImages(updatedImages);
+
+    // Create preview URLs for all images using Promise.all
+    const previewPromises = newFiles.map(
+      (file) => {
+        return new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result as string);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    );
+
+    Promise.all(previewPromises).then(
+      (newPreviewUrls) => {
+        setImageUrls((prevUrls) => [
+          ...prevUrls,
+          ...newPreviewUrls,
+        ]);
+      }
+    );
   };
 
-  if (!isOpen) return null;
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = images.filter(
+      (_, i) => i !== index
+    );
+    const updatedUrls = imageUrls.filter(
+      (_, i) => i !== index
+    );
+    setImages(updatedImages);
+    setImageUrls(updatedUrls);
+  };
+
+  if (!isOpen) return <></>;
 
   return (
-    <div className="PostForm" onClick={(e) => {
-      if (e.target === e.currentTarget) {
-        onClose();
-      }
-    }}>
+    <div
+      className="PostForm"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
       <div className="post-form-modal">
         <div className="post-form-header">
           <h3>שתף זכרון על ניר</h3>
@@ -110,60 +188,76 @@ function PostForm({ isOpen, onClose, onPostCreated }: PostFormProps): React.Reac
             ✕
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="post-form">
-        <div className="post-form-body">
-          <input
-            type="text"
-            className="post-writer-input"
-            placeholder="שמך (אופציונלי)"
-            value={writerName}
-            onChange={(e) => setWriterName(e.target.value)}
-          />
-          <textarea
-            className="post-textarea"
-            placeholder="מה אתה רוצה לשתף?"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            rows={4}
-          />
-          {imagePreview && (
-            <div className="image-preview-container">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="image-preview"
-              />
-              <button
-                type="button"
-                className="remove-image-btn"
-                onClick={handleRemoveImage}
-              >
-                ✕
-              </button>
-            </div>
-          )}
-        </div>
-        <div className="post-form-footer">
-          <div className="post-form-actions">
-            <label className="image-upload-label">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="image-upload-input"
-              />
-              <span className="image-upload-text">📷 הוסף תמונה</span>
-            </label>
+        <form
+          onSubmit={handleSubmit(sendMemory)}
+          className="post-form"
+        >
+          <div className="post-form-body">
+            <input
+              type="text"
+              className="post-writer-input"
+              placeholder="שמך (אופציונלי)"
+              {...register("writer")}
+            />
+            <textarea
+              className="post-textarea"
+              placeholder="מה אתה רוצה לשתף?"
+              {...register("memory")}
+              rows={4}
+            />
+            {imageUrls.length > 0 && (
+              <div className="images-preview-grid">
+                {imageUrls.map((url, index) => (
+                  <div
+                    key={index}
+                    className="image-preview-container"
+                  >
+                    <img
+                      src={url}
+                      alt={`Preview ${index + 1}`}
+                      className="image-preview"
+                    />
+                    <button
+                      type="button"
+                      className="remove-image-btn"
+                      onClick={() =>
+                        handleRemoveImage(index)
+                      }
+                      aria-label="הסר תמונה"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-          <button
-            type="submit"
-            className="post-submit-btn"
-            disabled={isUploading || (!text.trim() && !image)}
-          >
-            {isUploading ? "מפרסם..." : "פרסם"}
-          </button>
-        </div>
+          <div className="post-form-footer">
+            <div className="post-form-actions">
+              <label className="image-upload-label">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  className="image-upload-input"
+                  disabled={images.length >= 5}
+                />
+                <span className="image-upload-text">
+                  📷 הוסף תמונות ({images.length}
+                  /5)
+                </span>
+              </label>
+            </div>
+            <button
+              type="submit"
+              className="post-submit-btn"
+              disabled={isUploading}
+            >
+              {isUploading ? "מפרסם..." : "פרסם"}
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -171,4 +265,3 @@ function PostForm({ isOpen, onClose, onPostCreated }: PostFormProps): React.Reac
 }
 
 export default PostForm;
-

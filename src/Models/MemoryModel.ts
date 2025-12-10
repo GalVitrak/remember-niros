@@ -2,7 +2,8 @@ class MemoryModel {
   id?: string;
   memory: string;
   writer: string;
-  imageUrl?: string;
+  imageUrl?: string; // For backward compatibility
+  imageUrls?: string[]; // Array of image URLs (max 5)
   createdAt?: Date;
   status?: string;
   ApprovedAt?: Date;
@@ -12,6 +13,7 @@ class MemoryModel {
     memory: string,
     writer: string,
     imageUrl?: string,
+    imageUrls?: string[],
     createdAt?: Date,
     status?: string,
     ApprovedAt?: Date,
@@ -21,6 +23,7 @@ class MemoryModel {
     this.memory = memory;
     this.writer = writer;
     this.imageUrl = imageUrl;
+    this.imageUrls = imageUrls;
     this.createdAt = createdAt;
     this.status = status;
     this.ApprovedAt = ApprovedAt;
