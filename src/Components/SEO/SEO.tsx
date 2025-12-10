@@ -53,6 +53,12 @@ export function SEO({
     },
     url: siteUrl,
     image: defaultImage,
+    sameAs: [], // Add social media profiles if available
+    knowsAbout: ["סיירת גבעתי", "צה\"ל", "מלחמת חרבות ברזל"],
+    nationality: {
+      "@type": "Country",
+      name: "ישראל"
+    }
   };
 
   const jsonLd =
@@ -123,6 +129,16 @@ export function SEO({
 
       {/* Canonical URL */}
       <link rel="canonical" href={fullUrl} />
+
+      {/* Language and Alternate Links */}
+      <link rel="alternate" hrefLang="he" href={fullUrl} />
+      <link rel="alternate" hrefLang="x-default" href={fullUrl} />
+
+      {/* Additional SEO Meta Tags */}
+      <meta name="geo.region" content="IL" />
+      <meta name="geo.placename" content="Israel" />
+      <meta name="distribution" content="global" />
+      <meta name="rating" content="general" />
 
       {/* Structured Data (JSON-LD) */}
       <script type="application/ld+json">

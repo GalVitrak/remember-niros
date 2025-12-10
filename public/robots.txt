@@ -3,12 +3,12 @@
 User-agent: *
 Allow: /
 Allow: /memories
-Allow: /
 
-# Disallow admin pages
+# Disallow admin and authentication pages
+# /admin blocks all paths starting with /admin (including /admin/approve, /admin/pending, etc.)
 Disallow: /admin
 Disallow: /auth
 
-# Sitemap location (update with your actual domain)
+# Sitemap location
 Sitemap: https://rememberniros.com/sitemap.xml
 
