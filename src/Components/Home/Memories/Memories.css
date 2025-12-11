@@ -1,5 +1,5 @@
 .Memories {
-  width: 85%;
+  width: 100%;
   min-height: calc(100vh - 180px);
   display: flex;
   flex-direction: column;
@@ -16,23 +16,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
+  gap: 0;
+  margin-bottom: 1rem;
   text-align: center;
+  padding: 2rem 0;
+  border-bottom: 2px solid rgba(37, 6, 80, 0.1);
 }
 
 .memories-header h1 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: 700;
-  margin: 0;
-  color: var(--primary-color, #333);
+  margin: 0 0 0.75rem 0;
+  color: var(--primary-color, #250650);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .memories-header p {
-  font-size: 1.1rem;
-  font-weight: 400;
+  font-size: 1.25rem;
+  font-weight: 500;
   margin: 0;
-  color: var(--text-medium, #666);
+  color: var(--primary-dark, #3a136c);
 }
 
 .add-memory-section {
@@ -69,7 +72,7 @@
 
 .memories-feed {
   width: 100%;
-  max-width: 600px;
+  max-width: 900px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -183,13 +186,28 @@
 
 @media (max-width: 768px) {
   .Memories {
+    width: 85%;
     padding: 1.5rem 0.75rem 3rem 0.75rem;
     min-height: calc(100vh - 120px);
+    margin: 0 auto;
+  }
+
+  .memories-header {
+    padding: 1.5rem 0;
+  }
+
+  .memories-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .memories-header p {
+    font-size: 1.1rem;
   }
 
   .memories-feed {
     width: 100%;
     padding: 0;
+    gap: 1.5rem;
   }
 
   .nir-message {
@@ -220,8 +238,10 @@
 
 @media (max-width: 480px) {
   .Memories {
+    width: 85%;
     padding: 1rem 0.5rem 3rem 0.5rem;
     min-height: calc(100vh - 100px);
+    margin: 0 auto;
   }
 
   .memories-feed {
@@ -254,8 +274,12 @@
     font-size: 1.2rem;
   }
 
+  .memories-header {
+    padding: 1.5rem 0;
+  }
+
   .memories-header h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .memories-header p {

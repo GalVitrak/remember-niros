@@ -115,6 +115,14 @@ function Memories(): React.ReactElement {
       />
       <div className="Memories">
         <div className="memories-feed">
+          <div className="memories-header">
+            <h1>זכרונות מניר</h1>
+            <p>
+              אתם מוזמנים לשתף זכרונות, תמונות
+              וסיפורים, כדי להנציח את ניר שלנו
+            </p>
+          </div>
+
           <div className="nir-message">
             <div className="nir-message-header">
               <h2>
@@ -153,14 +161,6 @@ function Memories(): React.ReactElement {
                 ניר
               </p>
             </div>
-          </div>
-
-          <div className="memories-header">
-            <h1>זכרונות מניר</h1>
-            <p>
-              אתם מוזמנים לשתף זכרונות, תמונות
-              וסיפורים, כדי להנציח את ניר שלנו
-            </p>
           </div>
 
           <div className="add-memory-section">

@@ -6,6 +6,7 @@ import About from "../../Home/About/About";
 import { AdminDashboard } from "../../Admin/Dashboard/AdminDashboard";
 
 export function Routing(): React.ReactElement {
+
   return (
     <div className="Routing">
       <Routes>

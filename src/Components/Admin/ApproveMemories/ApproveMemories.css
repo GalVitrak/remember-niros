@@ -1,5 +1,8 @@
 .ApproveMemories {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .approve-header {
@@ -79,6 +82,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
+}
+
+.memory-admin-card > * {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .memory-admin-card:hover {
